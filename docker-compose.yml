@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: vue-app
+    container_name: vue-app-report
     restart: always
     volumes:
       - /etc/ssl/certs/cloud_aggreko.crt:/etc/nginx/ssl/certs/cloud_aggreko.crt
