@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vue-app
+    restart: always
+    volumes:
+      - /etc/ssl/certs/cloud_aggreko.crt:/etc/nginx/ssl/certs/cloud_aggreko.crt
+      - /etc/ssl/private/cloud_aggreko.key:/etc/nginx/ssl/private/cloud_aggreko.key
+    ports:
+      - 9998:80
+      - 443:443
+    command: ["nginx", "-g", "daemon off;"]

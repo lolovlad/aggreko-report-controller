@@ -1,0 +1,51 @@
+<script>
+import ClaimTable from "@/components/Tabels/ClaimTable.vue";
+import ClaimService from "@/store/claim.service.js";
+
+export default {
+  name: "ViewClaimAdminPage",
+  components: {ClaimTable},
+  data(){
+    return{
+    }
+  },
+  methods: {
+    editClaim(uuidClaim){
+      this.$router.push(`claim/edit/${uuidClaim}`)
+    },
+    deleteClaim(uuidClaim){
+      ClaimService.deleteClaim(uuidClaim).then(()=>{
+        this.$refs.claimTable.loadItem(1)
+      })
+    },
+    updateStateClaim(uuidClaim){
+      ClaimService.updateStateClaim(uuidClaim, 'accepted')
+          .then(() => {
+            this.$refs.claimTable.loadItem(1)
+          })
+    },
+    downgradeStateClaim(uuidClaim){
+      ClaimService.updateStateClaim(uuidClaim, 'draft')
+          .then(() => {
+            this.$refs.claimTable.loadItem(1)
+          })
+    },
+  }
+}
+</script>
+
+<template>
+  <v-row>
+    <v-col cols="12" md="12">
+      <claim-table @edit="editClaim"
+                   @delete="deleteClaim"
+                   @updateStateClaim="updateStateClaim"
+                   @downgradeStateClaim="downgradeStateClaim"
+                   ref="claimTable"/>
+    </v-col>
+  </v-row>
+</template>
+
+<style scoped>
+
+</style>
