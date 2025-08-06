@@ -11,5 +11,5 @@ services:
       - /etc/ssl/private/cloud_aggreko.key:/etc/nginx/ssl/private/cloud_aggreko.key
     ports:
       - 9998:80
-      - 443:443
+      - 9989:443
     command: ["nginx", "-g", "daemon off;"]
