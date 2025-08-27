@@ -1,10 +1,11 @@
 <script>
 import ClaimTable from "@/components/Tabels/ClaimTable.vue";
 import ClaimService from "@/store/claim.service";
+import AddClaimForm from "@/components/Forms/Main/AddClaimForm.vue";
 
 export default {
   name: "ClaimViewPage",
-  components: {ClaimTable},
+  components: {AddClaimForm, ClaimTable},
   data(){
     return{
     }
@@ -43,6 +44,7 @@ export default {
                    @downgradeStateClaim="downgradeStateClaim"
                    ref="claimTable"/>
     </v-col>
+    <add-claim-form/>
   </v-row>
 </template>
 

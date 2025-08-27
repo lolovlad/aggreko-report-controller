@@ -1,5 +1,4 @@
 <script>
-import ObjectService from "@/store/object.service";
 
 export default {
   name: "ItemObjectSelection",

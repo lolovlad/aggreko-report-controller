@@ -123,7 +123,8 @@ export default {
         name: null,
         surname: null,
         patronymic: null,
-        password: null
+        password: null,
+        painting: null
       },
       userScheme: {
         email: null,
@@ -132,7 +133,8 @@ export default {
         name: null,
         surname: null,
         patronymic: null,
-        password: null
+        password: null,
+        painting: null
       },
       typeUser: [],
       profUser: [],

@@ -151,7 +151,6 @@ export default {
         <delete-button v-if="mode === 'admin'"/>
         <upload-xlsx-form :uuid="item.uuid" v-if="mode === 'admin'"/>
         <upload-docx-form :uuid="item.uuid" v-if="mode === 'admin'"/>
-        <add-button @click="$emit('addClaim', item.uuid)" v-if="mode === 'user'"/>
       </template>
     </v-data-table-server>
   </v-card>

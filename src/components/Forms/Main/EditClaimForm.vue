@@ -2,9 +2,12 @@
 import ClaimService from "@/store/claim.service.js";
 import router from "@/router/router.js";
 import {auth as $store} from "@/store/auth.model.js";
+import GenerateClaimButton from "@/components/UI/Buttons/GenerateClaimButton.vue";
+import LoaderPage from "@/components/UI/LoaderPage.vue";
 
 export default {
   name: "EditClaimForm",
+  components: {LoaderPage, GenerateClaimButton},
   props: {
     uuidClaim: {
       type: String,
@@ -21,7 +24,8 @@ export default {
       claim: {
         mainFile: null,
         editFile: null,
-        comment: null
+        comment: null,
+        stateClaim: null
       },
       mainFileClaimRef: null,
       editFileClaimRef: null,
@@ -29,6 +33,8 @@ export default {
 
       mainFileClaim: null,
       editFileClaim: null,
+
+      loader: true
     }
   },
   methods:{
@@ -38,6 +44,9 @@ export default {
         this.mainFileClaimRef = claim.download_link_main
         this.claim.comment = claim.comment
         this.datetime = claim.datetime
+        this.claim.stateClaim = claim.state_claim
+
+        this.loader = false
       })
     },
     saveChange(){
@@ -56,6 +65,9 @@ export default {
       ClaimService.updateClaim(this.uuidClaim, form).then(()=>{
           router.back(-1)
       })
+    },
+    generateFile(){
+      this.getClaim()
     }
   },
   mounted() {
@@ -65,7 +77,8 @@ export default {
 </script>
 
 <template>
-  <v-form @submit.prevent>
+  <loader-page v-if="loader"/>
+  <v-form @submit.prevent v-else>
     <v-row>
       <v-col cols="12" sm="12">
         <v-textarea
@@ -99,8 +112,14 @@ export default {
         <v-file-input label="Файл" variant="underlined" v-model="claim.editFile" accept=".docx"/>
       </v-col>
     </v-row>
-
-    <v-btn class="mt-4" type="submit" @click="saveChange" v-if="!readOnly">Сохранить</v-btn>
+    <v-row class="mt-4">
+      <v-col cols="auto" v-if="!isUser && claim.stateClaim.system_name === 'accepted'">
+        <generate-claim-button @confirm="generateFile" :uuid-claim="uuidClaim"/>
+      </v-col>
+      <v-col cols="auto" v-if="!isUser">
+        <v-btn class="mt-4" type="submit" @click="saveChange">Сохранить</v-btn>
+      </v-col>
+    </v-row>
   </v-form>
 </template>
 

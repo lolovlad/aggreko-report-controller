@@ -1,9 +1,9 @@
 <script>
-import BlueprintService from "@/store/blueprint.service.js";
 import SelectUser from "@/components/UI/Models/SelectUser.vue";
 import SelectDevice from "@/components/UI/Models/SelectDevice.vue";
 import SelectEquipment from "@/components/UI/Models/SelectEquipment.vue";
 import moment from "moment-timezone";
+import ClaimService from "@/store/claim.service.js";
 
 export default {
   name: "CreateClaimForm",
@@ -12,95 +12,125 @@ export default {
   data() {
     return {
       formValid: false,
+      fileRules: [v => !!v || 'Прикрепите файл (.xlsx)'],
+      selectedProtocolsRules: [v => (v && v.length > 0) || 'Выберите хотя бы один протокол'],
       protocol: {
         date: null,
         object: null,
         protocols: [],
-        list_workers: []
+        list_workers: [],
+        selectedProtocols: []
       },
-      mainFile: null
+      mainFile: null,
+      linkMain: null,
+      linkBlueprint: null,
+      load: true
     }
   },
   mounted() {
-    this.loadSchema()
+    this.loadClaim()
   },
   methods: {
     isProtocolComplete(item) {
-      const r = item.remark
-      return r.note?.trim() && r.comment?.trim() && r.conclusion?.trim()
-    },
-    parseDate(dateInput) {
-      const date = new Date(dateInput);
+      const remark = item.remark || {}
 
-      const months = [
-        "Январь", "Февраль", "Март", "Апрель",
-        "Май", "Июнь", "Июль", "Август",
-        "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
-      ];
+      const noteOk = !!remark.note && remark.note.toString().trim().length > 0
+      const commentOk = !!remark.comment && remark.comment.toString().trim().length > 0
+      const conclusionOk = !!remark.conclusion && remark.conclusion.toString().trim().length > 0
+      const deviceOk = item.list_equipment && Object.keys(item.list_equipment).length > 0
 
-      const day = date.getDate();
-      const monthIndex = date.getMonth(); // 0-based
-      const monthStr = months[monthIndex];
-      const monthInt = String(monthIndex + 1).padStart(2, '0');
-      const year = date.getFullYear();
-
-      return {
-        day,
-        month: {
-          str: monthStr,
-          int: monthInt
-        },
-        year
-      }
+      return noteOk && commentOk && conclusionOk && deviceOk
     },
     submitProtocol() {
       this.$refs.form.validate()
-      if (!this.formValid) {
-        alert('Пожалуйста, заполните все обязательные поля.')
-        return
+
+      // Если базовые поля формы (rules) не валидны — не продолжаем
+      if (!this.formValid) return
+
+      // Доп.проверка без уведомлений: должен быть файл и выбранные протоколы
+      if (!this.mainFile) return
+      if (!this.protocol.selectedProtocols || this.protocol.selectedProtocols.length === 0) return
+
+      // Проверяем ТОЛЬКО выбранные протоколы: наличие прибора и заполненность трех полей remark
+      const selectedByName = new Set(this.protocol.selectedProtocols || [])
+      for (const item of this.protocol.protocols || []) {
+        if (!selectedByName.has(item.name)) continue
+
+        const remark = item.remark || {}
+        const noteOk = !!remark.note && remark.note.toString().trim().length > 0
+        const commentOk = !!remark.comment && remark.comment.toString().trim().length > 0
+        const conclusionOk = !!remark.conclusion && remark.conclusion.toString().trim().length > 0
+        const deviceOk = item.list_equipment && Object.keys(item.list_equipment).length > 0
+
+        if (!(noteOk && commentOk && conclusionOk && deviceOk)) {
+          this.formValid = false
+          return
+        }
       }
-      this.protocol.date = this.parseDate(this.protocol.date)
+
       this.$emit("create", this.protocol, this.mainFile)
     },
 
-    loadSchema(){
-      BlueprintService.getFileSchemas(this.uuid).then(schema => {
-        this.protocol = schema
+    loadClaim(){
+      ClaimService.get(this.uuid).then(claim => {
+        this.protocol = claim.blueprint_json_file
+        // Значения по умолчанию для remark + инициализация list_equipment
+        const defaultRemark = {
+          note: 'Нет',
+          comment: 'Нет',
+          conclusion: 'Оборудование соответствует требованиям НТД'
+        }
+        for (const p of (this.protocol.protocols || [])) {
+          console.log(p)
+          p.remark = {
+            ...defaultRemark,
+          }
+        }
+
+        this.linkBlueprint = claim.blueprint.download_link
+        this.linkMain = claim.download_link_xlsx_blueprint
+        this.load = false
       })
     },
-    formatDate(date){
-      return moment(date).format('DD/MM/YYYY');
-    },
+  },
+  computed: {
+    allProtocolNames() {
+      return this.protocol.protocols
+          .filter(item => item.name)
+          .map(item => item.name)
+    }
   }
 }
 </script>
 
 <template>
-  <v-container fluid>
+  <v-container v-if="load">
+
+  </v-container>
+  <v-container fluid v-else>
     <v-form ref="form" v-model="formValid">
-      <!-- Общая информация -->
       <v-row>
-        <v-col cols="12" md="6">
-          <label>Время время следующей проверки *</label>
-          <VueDatePicker
-              v-model="protocol.date"
-              locale="ru"
-              :format="formatDate"
-              utc="preserve"
-          >
-            >
-            <template #input-icon>
-              <img/>
-            </template>
-          </VueDatePicker>
+        <v-col cols="12" sm="6" v-if="linkBlueprint">
+          <a :href="linkBlueprint">Скачать главный файл</a>
         </v-col>
-        <v-col cols="12" md="6">
-          <select-equipment v-model="protocol.object"/>
+        <v-col cols="12" sm="6" v-if="linkMain">
+          <a :href="linkMain">Скачать заполненый файл</a>
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" md="12">
-          <v-file-input label="Файл" variant="underlined" v-model="mainFile" accept=".xlsx"/>
+        <v-col cols="12" md="6">
+          <v-file-input label="Файл" variant="underlined" v-model="mainFile" accept=".xlsx" :rules="fileRules"/>
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-select
+              v-model="protocol.selectedProtocols"
+              :items="allProtocolNames"
+              label="Выберите протоколы"
+              multiple
+              chips
+              clearable
+              :rules="selectedProtocolsRules"
+          />
         </v-col>
       </v-row>
 

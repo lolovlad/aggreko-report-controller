@@ -12,18 +12,14 @@ export default {
   data(){
     return{
       headers: [
-        { title: 'UUID', key: 'uuid', sortable: false, value: item => `${item.uuid}`},
-        { title: 'Время', key: 'datetime', sortable: false, value: item => {
-            let dateNew = new Date(item.datetime)
-            return moment(dateNew).format('DD.MM.YYYY HH:mm')
+        { title: 'Название', key: 'name', sortable: false, value: item => {
+            // Используем название из схемы, если есть, иначе UUID
+            return item.name
           }
         },
-        { title: 'Автор', key: 'user', sortable: false, value: item => {
-            let user = item.user
-            return `${user.surname} ${user.name} ${user.patronymic}`
-          }
-        },
-        { title: 'Главный файд', sortable: false, key: 'download_link_main'},
+        { title: 'Название оборудования', key: 'equipment', sortable: false, value: item => item.equipment?.name || '—' },
+        { title: 'Название шаблона', key: 'template', sortable: false, value: item => item.blueprint?.name || '—' },
+        { title: 'Главный файл', sortable: false, key: 'download_link_main'},
         { title: 'Состояние заявки', sortable: false, key: 'state_claim', value: item => {
             return `${item.state_claim.name}`
           }

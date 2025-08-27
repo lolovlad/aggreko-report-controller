@@ -12,9 +12,9 @@ class ClaimService {
                 throw e
             })
     }
-    add(uuidBlueprint, form){
+    add(data){
         return axios
-            .post(`/claim/${uuidBlueprint}`, form)
+            .post(`/claim/`, data)
             .then(response => {
                 if(response.status === 201)
                     return response
@@ -48,6 +48,28 @@ class ClaimService {
     updateClaim(uuid, form){
         return  axios
             .post(`/claim/update/${uuid}`, form)
+            .then(response => {
+                if(response.status === 200)
+                    return response
+            })
+            .catch(function (e){
+                throw e
+            })
+    }
+    updateClaimData(uuid, form){
+        return  axios
+            .post(`/claim/update/data/${uuid}`, form)
+            .then(response => {
+                if(response.status === 200)
+                    return response
+            })
+            .catch(function (e){
+                throw e
+            })
+    }
+    updateFileClaim(uuid){
+        return  axios
+            .post(`/claim/update/main_file/${uuid}`)
             .then(response => {
                 if(response.status === 200)
                     return response

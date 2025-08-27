@@ -100,11 +100,19 @@ export default {
     },
   },
   mounted() {
-    for(let i of this.modelValue){
-      i.date_check_last = this.formatDate(i.date_check_last)
-      i.date_check_next  = this.formatDate(i.date_check_next)
-      this.content[i.id] = i
+
+    //console.log(this.modelValue, this.content )
+    //this.content = this.modelValue
+    console.log(this.modelValue, this.content )
+
+    for (let item of Object.values(this.modelValue)) {
+      this.content[item.id] = {
+        ...item,
+        date_check_last: this.formatDate(item.date_check_last),
+        date_check_next: this.formatDate(item.date_check_next)
+      }
     }
+
     DeviceService.search(this.search)
         .then(devices => {
           this.device = devices
