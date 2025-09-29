@@ -25,7 +25,7 @@
           <v-btn
               text="Сохранить"
               variant="text"
-              @click="saveAccident"
+              @click="addClaim"
           ></v-btn>
         </v-toolbar-items>
       </v-toolbar>
@@ -100,7 +100,7 @@ export default {
       return false
     },
 
-    saveAccident(){
+    addClaim(){
       if(this.validate()){
         ClaimService.add({
           name: this.claim.name,

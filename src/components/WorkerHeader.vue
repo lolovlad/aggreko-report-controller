@@ -113,7 +113,6 @@ export default {
       temporary
   >
     <v-list density="compact" nav>
-      <v-list-item prepend-icon="mdi-bank-outline" title="Шаблоны" @click="blueprintPage"/>
       <v-list-item prepend-icon="mdi-file-alert" title="Заявки" @click="claimPage"/>
     </v-list>
   </v-navigation-drawer>

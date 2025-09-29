@@ -14,6 +14,9 @@ export default {
     editClaim(uuidClaim){
       this.$router.push(`claim/edit/${uuidClaim}`)
     },
+    loadClaim(claim){
+      this.$refs.claimTable.loadItem(1)
+    },
     deleteClaim(uuidClaim){
       ClaimService.deleteClaim(uuidClaim).then(()=>{
         this.$refs.claimTable.loadItem(1)
@@ -44,7 +47,7 @@ export default {
                    @downgradeStateClaim="downgradeStateClaim"
                    ref="claimTable"/>
     </v-col>
-    <add-claim-form/>
+    <add-claim-form @save="loadClaim"/>
   </v-row>
 </template>
 
