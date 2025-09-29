@@ -113,7 +113,10 @@ export default {
       </v-col>
     </v-row>
     <v-row class="mt-4">
-      <v-col cols="auto" v-if="!isUser && claim.stateClaim.system_name === 'accepted'">
+      <!--<v-col cols="auto" v-if="!isUser && claim.stateClaim.system_name === 'accepted'">
+        <generate-claim-button @confirm="generateFile" :uuid-claim="uuidClaim"/>
+      </v-col>-->
+      <v-col cols="auto">
         <generate-claim-button @confirm="generateFile" :uuid-claim="uuidClaim"/>
       </v-col>
       <v-col cols="auto" v-if="!isUser">
