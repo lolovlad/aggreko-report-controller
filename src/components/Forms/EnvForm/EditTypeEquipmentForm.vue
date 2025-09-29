@@ -1,5 +1,6 @@
 <script>
 import EnvService from "@/store/env.service";
+import {th} from "vuetify/locale";
 
 export default {
   name: "EditTypeEquipmentForm",
@@ -13,11 +14,13 @@ export default {
     dialog: false,
     typeEquipment: {
       id: null,
+      system_name: null,
       name: null,
       code: null,
       description: null
     },
     scemaTypeEquipment: {
+      system_name: null,
       id: null,
       name: null,
       code: null,
@@ -26,6 +29,7 @@ export default {
   }),
   methods: {
     saveEquip(){
+      this.typeEquipment.system_name = this.typeEquipment.name
       EnvService.addTypeEquipment(this.typeEquipment).then(() => {
 
         this.clearForm()
@@ -69,7 +73,7 @@ export default {
               md="12"
           >
             <v-text-field
-                label="Название"
+                label="Название*"
                 type="text"
                 v-model="typeEquipment.name"
                 required
@@ -92,7 +96,7 @@ export default {
               md="12"
           >
             <v-text-field
-                label="На русском языке*"
+                label="Описание"
                 v-model="typeEquipment.description"
                 type="text"
                 required

@@ -7,6 +7,7 @@ import EditButton from "@/components/UI/Buttons/EditButton.vue";
 import UploadXlsxForm from "@/components/Forms/Optimal/UploadXlsxForm.vue";
 import AddButton from "@/components/UI/Buttons/AddButton.vue";
 import UploadDocxForm from "@/components/Forms/Optimal/UploadDocxForm.vue";
+import blueprintService from "@/store/blueprint.service.js";
 
 export default {
   name: "BlueprintTable",
@@ -77,6 +78,12 @@ export default {
     saveState(){
       this.$store.dispatch('page/saveState', {name: "blueprint", page: this.page, perItemPage: this.itemsPerPage})
     },
+    deleteBlueprint(uuid){
+      this.saveState()
+      blueprintService.deleteBlueprint(uuid).then(() => {
+        this.loadItem({page: 1, itemsPerPage: 20})
+      })
+    }
   },
   watch: {
     search(){
@@ -148,7 +155,7 @@ export default {
         </a>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <delete-button v-if="mode === 'admin'"/>
+        <delete-button v-if="mode === 'admin'" @agree="deleteBlueprint(item.uuid)"/>
         <upload-xlsx-form :uuid="item.uuid" v-if="mode === 'admin'"/>
         <upload-docx-form :uuid="item.uuid" v-if="mode === 'admin'"/>
       </template>

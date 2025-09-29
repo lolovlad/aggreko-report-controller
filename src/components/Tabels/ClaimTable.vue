@@ -45,6 +45,9 @@ export default {
     },
     deleteClaim(item){
       this.saveState()
+      ClaimService.deleteClaim(item.uuid).then(response => {
+        this.loadItem({page: 1, itemsPerPage: 20})
+      })
       this.$emit("delete", item.uuid)
     },
     editClaim(item){
@@ -121,6 +124,21 @@ export default {
       }else{
         return item.state_claim.system_name !== 'accepted'
       }
+    },
+    isUserDelete(item){
+      if(this.typeUser === "user"){
+        if(item.state_claim.system_name === 'draft'){
+          return true
+        }else{
+          return false
+        }
+      }else{
+        if(item.state_claim.system_name !== 'under_development'){
+          return true
+        }else{
+          return false
+        }
+      }
     }
   }
 }
@@ -163,7 +181,7 @@ export default {
         <a :href="item.download_link_main">Скачать</a>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <delete-button @agree="deleteClaim(item)" v-if="isUser(item)"/>
+        <delete-button @agree="deleteClaim(item)" v-if="isUserDelete(item)"/>
         <edit-button @click="editClaim(item)"/>
         <send-forward-button
             v-if="isUser(item)"

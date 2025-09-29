@@ -61,7 +61,6 @@
 
 <script>
 import ItemObjectSelection from "@/components/UI/ItemObjectSelection.vue";
-import moment from 'moment-timezone';
 import SelectEquipment from "@/components/UI/Models/SelectEquipment.vue";
 import SelectBlueprint from "@/components/UI/Models/SelectBlueprint.vue";
 import FixedButton from "@/components/UI/FixedButton.vue";
@@ -72,7 +71,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: "Добавить АО"
+      default: "Добавить заявку"
     }
   },
   data(){

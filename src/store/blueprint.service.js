@@ -71,5 +71,17 @@ class BlueprintService {
                 throw e
             })
     }
+    deleteBlueprint(uuid){
+        return axios
+            .delete(`/blueprint/${uuid}`, )
+            .then((response) => {
+                if(response.status === 200){
+                    return response
+                }
+            })
+            .catch(function (e){
+                throw e
+            })
+    }
 }
 export default new BlueprintService();

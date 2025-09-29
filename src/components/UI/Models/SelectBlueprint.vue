@@ -93,7 +93,7 @@ export default {
         <v-col cols="auto">
           <v-btn
               class="text-none font-weight-regular"
-              prepend-icon="mdi-cog"
+              prepend-icon="mdi-file-document-outline"
               variant="tonal"
               v-bind="activatorProps"
               :disabled="readonly"
