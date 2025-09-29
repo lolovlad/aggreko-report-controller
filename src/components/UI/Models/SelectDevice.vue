@@ -30,6 +30,16 @@ export default {
       { title: 'Название', align: 'start', sortable: false, key: 'name'},
       { title: 'Тип', key: 'type', align: 'start', sortable: false, value: item => `${item.type.name}` },
       { title: 'Код', key: 'code', align: 'start', sortable: false},
+      { title: 'Дата последней проверки', key: 'date_check_last', align: 'start', sortable: false, value: item => {
+            let dateNew = new Date(item.date_check_last)
+            return moment(dateNew).format('DD.MM.YYYY')
+          }
+        },
+        { title: 'Дата следующей проверки', key: 'date_check_next', align: 'start', sortable: false, value: item => {
+            let dateNew = new Date(item.date_check_next)
+            return moment(dateNew).format('DD.MM.YYYY')
+          }
+        },
     ],
     itemsPerPage: 20,
     page: 1,
@@ -126,7 +136,7 @@ export default {
   <v-dialog
       v-model="dialog"
       transition="dialog-bottom-transition"
-      max-width="800"
+      max-width="1000"
   >
     <template v-slot:activator="{ props: activatorProps }">
       <v-row align="center" justify="start">
@@ -137,6 +147,8 @@ export default {
               <th class="text-left">Название</th>
               <th class="text-left">Тип</th>
               <th class="text-left">Код</th>
+              <th class="text-left">Дата последней проверки</th>
+              <th class="text-left">Дата следующей проверки</th>
             </tr>
             </thead>
             <tbody>
@@ -144,6 +156,8 @@ export default {
               <td>{{ item.name }}</td>
               <td>{{ item.type.name || 'Нет данных'}}</td>
               <td>{{ item.code || 'Нет данных'}}</td>
+              <td>{{ item.date_check_last || 'Нет данных'}}</td>
+              <td>{{ item.date_check_next || 'Нет данных'}}</td>
             </tr>
             </tbody>
           </v-table>
@@ -217,6 +231,8 @@ export default {
                   <td>{{ item.name }}</td>
                   <td>{{ item.type.name || 'Нет данных'}}</td>
                   <td>{{ item.code || 'Нет данных'}}</td>
+                  <td>{{ item.date_check_last ? formatDate(item.date_check_last) : 'Нет данных'}}</td>
+                  <td>{{ item.date_check_next ? formatDate(item.date_check_next) : 'Нет данных'}}</td>
                 </tr>
               </template>
             </v-data-table-server>

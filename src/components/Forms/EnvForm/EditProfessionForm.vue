@@ -14,16 +14,16 @@ export default {
     prof: {
       id: null,
       name: null,
-      description: null
+      system_name: null,
+      description: null,
     }
   }),
   methods: {
     saveProf(){
       EnvService.addProf(this.prof).then(response => {
-        console.log(response)
-
         this.prof.id = null
         this.prof.name = null
+        this.prof.system_name = null
         this.prof.description = null
 
         this.dialog = false
@@ -66,7 +66,7 @@ export default {
             <v-text-field
                 label="Системное название на ENG*"
                 type="text"
-                v-model="prof.name"
+                v-model="prof.system_name"
                 required
             ></v-text-field>
           </v-col>
@@ -78,7 +78,7 @@ export default {
           >
             <v-text-field
                 label="На русском языке*"
-                v-model="prof.description"
+                v-model="prof.name"
                 type="text"
                 required
             ></v-text-field>

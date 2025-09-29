@@ -25,6 +25,11 @@ export default {
           }
       )
     },
+    deleteCastome(id){
+      EnvService.deleteTypeBlueprint(id).then(()  => {
+        this.loadData()
+      })
+    }
   },
   mounted() {
     this.loadData()
@@ -47,7 +52,7 @@ export default {
             hide-default-footer
         >
           <template v-slot:[`item.actions`]="{ item }">
-            <delete-button @agree="deleteRegion(item.id)"/>
+            <delete-button @agree="deleteCastome(item.id)"/>
           </template>
         </v-data-table-virtual>
       </v-col>

@@ -144,6 +144,30 @@ class EnvService{
                 throw e
             })
     }
+    deleteTypeBlueprint(idT){
+        return axios
+            .delete(`/env/type_blueprint/${idT}`, )
+            .then((response) => {
+                if(response.status === 200){
+                    return response
+                }
+            })
+            .catch(function (e){
+                throw e
+            })
+    }
+    deleteTypeEquipmentBlueprint(idT){
+        return axios
+            .delete(`/env/type_equipment_blueprint/${idT}`, )
+            .then((response) => {
+                if(response.status === 200){
+                    return response
+                }
+            })
+            .catch(function (e){
+                throw e
+            })
+    }
 }
 
 export default new EnvService();

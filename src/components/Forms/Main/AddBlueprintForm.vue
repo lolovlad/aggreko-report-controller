@@ -11,6 +11,7 @@ export default {
       dialog: false,
       snackbar: false,
       message: null,
+      loading: false,
 
       listTypeBlueprint: [],
       listTypeEquipmentBlueprint: [],
@@ -61,6 +62,7 @@ export default {
     async add(){
       const valid = await this.$refs.form.validate()
       if(valid.valid){
+        this.loading = true
         const form = new FormData()
         for (const key in this.blueprint) {
           const value = this.blueprint[key]
@@ -74,6 +76,8 @@ export default {
             this.dialog = false
             this.$emit("add")
           })
+        }).finally(() => {
+          this.loading = false
         })
       }
     },
@@ -101,7 +105,16 @@ export default {
         <v-btn
             icon="mdi-close"
             @click="dialog = false"
-        ></v-btn>
+            :disabled="loading"
+        >
+          <v-progress-circular
+              v-if="loading"
+              indeterminate
+              size="20"
+              width="2"
+              style="color: white"
+          />
+        </v-btn>
 
         <v-toolbar-title>Добавить шаблон</v-toolbar-title>
 
@@ -109,10 +122,20 @@ export default {
 
         <v-toolbar-items>
           <v-btn
-              text="Сохранить"
               variant="text"
               @click="add"
-          ></v-btn>
+              :disabled="loading"
+          >
+            <v-progress-circular
+                v-if="loading"
+                indeterminate
+                size="16"
+                width="2"
+                style="color: white; margin-right: 8px"
+            />
+            <span v-if="!loading">Сохранить</span>
+            <span v-else>Сохранение...</span>
+          </v-btn>
         </v-toolbar-items>
       </v-toolbar>
       <v-card-text>
