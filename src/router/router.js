@@ -245,21 +245,7 @@ const routes = [
                         component: EditClaimPage
                     }
                 ]
-            },
-            {
-                path: "blueprint",
-                component: BaseUserBlueprintPage,
-                children: [
-                    {
-                        path: "",
-                        component: ViewUserBlueprintPage
-                    },
-                    {
-                        path: "create_claim/:uuid",
-                        component: AddUserClaimPage
-                    }
-                ]
-            },
+            }
         ],
         beforeEnter: (to, from, next) => {
             const initialState = $store.state;

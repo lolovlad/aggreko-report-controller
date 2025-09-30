@@ -1,8 +1,10 @@
 <script>
 import EnvService from "@/store/env.service";
+import DeleteButton from "@/components/UI/Buttons/DeleteButton.vue";
 
 export default {
   name: 'ProfessionalTable',
+  components: {DeleteButton},
   data(){
     return{
       headers: [
@@ -55,13 +57,7 @@ export default {
         item-value="id"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon
-            class="me-2"
-            size="small"
-            @click="deleteProf(item.id)"
-        >
-          mdi-delete
-        </v-icon>
+        <delete-button @agree="deleteProf(item.id)"/>
       </template>
     </v-data-table-virtual>
   </v-card>

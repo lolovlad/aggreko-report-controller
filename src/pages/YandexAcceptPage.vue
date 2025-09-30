@@ -22,7 +22,7 @@ export default {
                 else{
                   const initialState = $store.state;
                   if(initialState.user.type.system_name === "user"){
-                    router.push("/user/blueprint")
+                    router.push("/user/claim")
                   }else{
                     router.push('/admin/user')
                   }
@@ -40,7 +40,7 @@ export default {
                   else{
                     const initialState = $store.state;
                     if(initialState.user.type.system_name === "user"){
-                      router.push("/user/blueprint")
+                      router.push("/user/claim")
                     }else{
                       router.push('/admin/user')
                     }
