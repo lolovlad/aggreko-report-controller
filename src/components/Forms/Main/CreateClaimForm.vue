@@ -81,9 +81,11 @@ export default {
           conclusion: 'Оборудование соответствует требованиям НТД'
         }
         for (const p of (this.protocol.protocols || [])) {
-          console.log(p)
-          p.remark = {
-            ...defaultRemark,
+          // Устанавливаем дефолтные значения только если remark пустой или не существует
+          if (!p.remark || Object.keys(p.remark).length === 0) {
+            p.remark = {
+              ...defaultRemark,
+            }
           }
         }
 
